@@ -9,7 +9,7 @@ namespace DIDI.Editor
         [MenuItem("Tools/H2DT/Setup/Create Default Folders")]
         public static void CreateDefaultFolders()
         {
-            CreateDirectories("_Props", "Scripts", "Scenes", "Management", "Graphics", "Lozalization");
+            CreateDirectories("_Projects", "Scripts", "Scenes", "Management", "Graphics", "Lozalization");
             AssetDatabase.Refresh();
         }
 
