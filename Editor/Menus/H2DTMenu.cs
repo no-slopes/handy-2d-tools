@@ -6,7 +6,7 @@ namespace DIDI.Editor
 {
     public static class H2DTMenu
     {
-        [MenuItem("H2DT/Setup/Create Default Folders")]
+        [MenuItem("Tools/H2DT/Setup/Create Default Folders")]
         public static void CreateDefaultFolders()
         {
             CreateDirectories("_Props", "Scripts", "Scenes", "Management", "Graphics", "Lozalization");
