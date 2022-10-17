@@ -1,0 +1,21 @@
+{
+    "name": "com.no-slopes.handy-2d-tools",
+    "version": "1.0.0-alpha",
+    "displayName": "Handy 2D Tools",
+    "description": "A batch of helpful 2D tools for Unity.",
+    "author": {
+        "name": "No Slopes",
+        "email": "no-slopes@gmail.com",
+        "url": "http://githbub.com/no-slopes"
+    },
+    "keywords": [
+        "2D",
+        "tools",
+        "character",
+        "controller",
+        "fsm",
+        "state",
+        "machine",
+        "parallax"
+    ]
+}
