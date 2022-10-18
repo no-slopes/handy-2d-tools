@@ -2,14 +2,14 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 
-namespace DIDI.Editor
+namespace H2DT.Editor.BootStraping
 {
-    public static class H2DTMenu
+    public static class Folders
     {
         [MenuItem("Tools/H2DT/Setup/Create Default Folders")]
         public static void CreateDefaultFolders()
         {
-            CreateDirectories("_Projects", "Scripts", "Scenes", "Management", "Graphics", "Lozalization");
+            CreateDirectories("_Project", "Scripts", "Scenes", "Management", "Graphics", "Lozalization");
             AssetDatabase.Refresh();
         }
 
