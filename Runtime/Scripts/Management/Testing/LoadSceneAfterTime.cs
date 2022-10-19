@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using H2DT.Management;
+using H2DT.Management.Booting;
 using H2DT.Management.Scenes;
 using UnityEngine;
 
-public class LoadSceneAfterTime : MonoBehaviour
+public class LoadSceneAfterTime : BooterSubject
 {
 
     [Space]

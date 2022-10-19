@@ -120,13 +120,16 @@ namespace H2DT.Management.Scenes
 
         public async Task<bool> LoadScene(SceneInfo targetSceneInfo, LoadSceneMode loadSceneMode = LoadSceneMode.Single, bool closeCurtains = true, Func<Task> BeforeOpenCurtainsTask = null)
         {
+
             if (_status != SceneHandlerStatus.Idle)
             {
                 if (_debug)
-                    Debug.LogWarning($"{name} - {GetType().Name} - Tryed loading {targetSceneInfo.sceneField} while handler is Idle.");
+                    Debug.LogWarning($"{name} - {GetType().Name} - Tryed loading {targetSceneInfo.sceneField} while handler is busy.");
 
                 return false;
             }
+
+            Debug.Log(targetSceneInfo);
 
             if (targetSceneInfo == null)
             {
@@ -140,9 +143,10 @@ namespace H2DT.Management.Scenes
             SceneEndedEvent.Invoke(_currentSceneInfo);
 
             if (closeCurtains)
-                await CloseCurtains(_currentSceneInfo);
+                await CloseCurtains(targetSceneInfo);
 
-            await UnloadCurrentScene();
+            if (loadSceneMode.Equals(LoadSceneMode.Additive))
+                await UnloadCurrentScene();
 
             _currentSceneInfo = targetSceneInfo;
 
@@ -171,6 +175,7 @@ namespace H2DT.Management.Scenes
 
         protected async Task CloseCurtains(SceneInfo sceneInfo)
         {
+            if (sceneInfo == null) return;
             GameObject transitionPrefab = sceneInfo.enterTransitionPrefab != null ? sceneInfo.enterTransitionPrefab : _defaultSceneTransitionPrefab;
             await _curtainsHandler.CloseCurtains(transitionPrefab);
         }
