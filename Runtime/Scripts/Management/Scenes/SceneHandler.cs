@@ -129,8 +129,6 @@ namespace H2DT.Management.Scenes
                 return false;
             }
 
-            Debug.Log(targetSceneInfo);
-
             if (targetSceneInfo == null)
             {
                 if (_debug)
