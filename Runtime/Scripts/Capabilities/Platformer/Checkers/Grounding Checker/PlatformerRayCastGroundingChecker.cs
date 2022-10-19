@@ -32,6 +32,16 @@ namespace H2DT.Capabilities.Platforming
         [ReadOnly]
         protected bool _grounded = false;
 
+        [ShowIf("_debugOn")]
+        [SerializeField]
+        [ReadOnly]
+        protected float _ungroundedFor = 0;
+
+        [ShowIf("_debugOn")]
+        [SerializeField]
+        [ReadOnly]
+        protected float _lastUngroundedTime = 0;
+
 
         [Header("Ground check Collider")]
         [Tooltip("This is optional. You can either specify the collider or leave to this component to find a CapsuleCollider2D. Usefull if you have multiple colliders")]
@@ -115,10 +125,6 @@ namespace H2DT.Capabilities.Platforming
 
         #endregion
 
-        #region Interfaces
-
-        #endregion
-
         #region Components
 
         protected Rigidbody2D _rb;
@@ -157,6 +163,11 @@ namespace H2DT.Capabilities.Platforming
         /// </summary>
         /// <returns> true if... grounded! </returns>
         public bool grounded => _grounded;
+
+        /// <summary>
+        /// Represents how long the subject has been ungrounded
+        /// </summary>
+        public float lastUngroundedTime => _lastUngroundedTime;
 
         public UnityEvent<bool> GroundingUpdate => _groundingUpdate;
 
@@ -210,7 +221,6 @@ namespace H2DT.Capabilities.Platforming
         /// <returns> true if grounded </returns>
         public virtual bool EvaluateGrounding()
         {
-
             CastPositions positions = CalculatePositions(_groundingCollider.bounds.center, _groundingCollider.bounds.extents);
 
             Vector2 castDirection = _verticalDirection == VerticalDirection.Down ? Vector2.down : Vector2.up;
@@ -221,10 +231,30 @@ namespace H2DT.Capabilities.Platforming
 
             bool check = (_checkRight && rightHit.collider != null) || (_checkCenter && centerHit.collider != null) || (_checkLeft && leftHit.collider != null);
 
+            EvaluateUngrounding(check);
             UpdateGroundedStatus(check); // Update grounded property and fire events
             DebugGroundCheck(castDirection, positions, rightHit, leftHit, centerHit);
 
             return check;
+        }
+
+        protected virtual void EvaluateUngrounding(bool grounded)
+        {
+            if (_grounded && grounded)
+            {
+                _ungroundedFor = 0;
+            }
+            else
+            {
+                if (!grounded)
+                {
+                    _ungroundedFor += Time.deltaTime;
+                }
+                else if (!_grounded && grounded)
+                {
+                    _lastUngroundedTime = _ungroundedFor;
+                }
+            }
         }
 
         /// <summary>
