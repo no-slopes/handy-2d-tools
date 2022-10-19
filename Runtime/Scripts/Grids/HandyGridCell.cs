@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace H2DT.Grids
 {
-    public class GridCell<T>
+    public class HandyGridCell<T>
     {
         #region Fields
 
-        protected Grid<T> _grid;
+        protected HandyGrid<T> _grid;
         protected int _x;
         protected int _y;
         protected Vector2 _rawGridPosition;
@@ -32,7 +32,7 @@ namespace H2DT.Grids
 
         #region Contructors
 
-        public GridCell(Grid<T> grid, int x, int y)
+        public HandyGridCell(HandyGrid<T> grid, int x, int y)
         {
             _grid = grid;
             _x = x;

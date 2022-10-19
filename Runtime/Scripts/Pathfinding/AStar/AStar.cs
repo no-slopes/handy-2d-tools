@@ -18,7 +18,7 @@ namespace H2DT.Pathfinding.AStar
 
         #region  Fields
 
-        protected Grid<PathNode> _grid;
+        protected HandyGrid<PathNode> _grid;
         protected Vector2 _origin;
 
         protected List<PathNode> _openList;
@@ -37,7 +37,7 @@ namespace H2DT.Pathfinding.AStar
 
         #region Getters
 
-        public Grid<PathNode> grid => _grid;
+        public HandyGrid<PathNode> grid => _grid;
 
         #endregion
 
@@ -45,7 +45,7 @@ namespace H2DT.Pathfinding.AStar
 
         public AStar(int width, int height, Vector2 origin)
         {
-            _grid = new Grid<PathNode>(origin, width, height, 1);
+            _grid = new HandyGrid<PathNode>(origin, width, height, 1);
             _origin = origin;
             _grid.Initialize(OnGridCellCreated);
 
@@ -63,7 +63,7 @@ namespace H2DT.Pathfinding.AStar
 
         #region  Contructor Callbacks
 
-        protected void OnGridCellCreated(GridCell<PathNode> cell)
+        protected void OnGridCellCreated(HandyGridCell<PathNode> cell)
         {
             cell.cellValue = new PathNode(cell);
         }

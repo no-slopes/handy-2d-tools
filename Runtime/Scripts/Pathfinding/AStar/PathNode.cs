@@ -8,7 +8,7 @@ namespace H2DT.Pathfinding.AStar
     public class PathNode
     {
 
-        protected GridCell<PathNode> _gridCell;
+        protected HandyGridCell<PathNode> _gridCell;
 
         protected int _gCost;
         protected int _hCost;
@@ -17,7 +17,7 @@ namespace H2DT.Pathfinding.AStar
 
         protected bool _walkable;
 
-        public GridCell<PathNode> gridCell => _gridCell;
+        public HandyGridCell<PathNode> gridCell => _gridCell;
 
         public int gCost { get { return _gCost; } set { _gCost = value; } }
         public int hCost { get { return _hCost; } set { _hCost = value; } }
@@ -28,7 +28,7 @@ namespace H2DT.Pathfinding.AStar
 
         public PathNode cameFromNode { get { return _cameFromNode; } set { _cameFromNode = value; } }
 
-        public PathNode(GridCell<PathNode> gridCell)
+        public PathNode(HandyGridCell<PathNode> gridCell)
         {
             _gridCell = gridCell;
             _walkable = true;

@@ -7,7 +7,7 @@ using static H2DT.Utils.Math;
 
 namespace H2DT.Grids
 {
-    public class Grid<T>
+    public class HandyGrid<T>
     {
         #region Fields
 
@@ -19,7 +19,7 @@ namespace H2DT.Grids
         protected int _cellSize;
 
         protected int[,] _grid;
-        protected Dictionary<Vector2Int, GridCell<T>> _cells = new Dictionary<Vector2Int, GridCell<T>>();
+        protected Dictionary<Vector2Int, HandyGridCell<T>> _cells = new Dictionary<Vector2Int, HandyGridCell<T>>();
 
         #endregion
 
@@ -38,12 +38,12 @@ namespace H2DT.Grids
 
         #region  Constructors
 
-        public Grid(Vector2 origin, int width, int height, int cellSize) : this(width, height, cellSize)
+        public HandyGrid(Vector2 origin, int width, int height, int cellSize) : this(width, height, cellSize)
         {
             _origin = origin;
         }
 
-        public Grid(int width, int height, int cellSize)
+        public HandyGrid(int width, int height, int cellSize)
         {
             _width = width;
             _height = height;
@@ -54,7 +54,7 @@ namespace H2DT.Grids
 
         #region Logic
 
-        public void Initialize(UnityAction<GridCell<T>> OnCellCreated = null)
+        public void Initialize(UnityAction<HandyGridCell<T>> OnCellCreated = null)
         {
             _grid = new int[_width, _height];
 
@@ -63,14 +63,14 @@ namespace H2DT.Grids
                 for (int y = 0; y < _grid.GetLength(1); y++)
                 {
                     Vector2Int pos = new Vector2Int(x, y);
-                    GridCell<T> cell = new GridCell<T>(this, x, y);
+                    HandyGridCell<T> cell = new HandyGridCell<T>(this, x, y);
                     _cells.Add(pos, cell);
                     OnCellCreated?.Invoke(cell);
                 }
             }
         }
 
-        public GridCell<T> GetCell(Vector2 worldPos)
+        public HandyGridCell<T> GetCell(Vector2 worldPos)
         {
             Vector2Int pos = WorldIntoCellPosDeducingOrigin(worldPos, _origin);
 
@@ -79,7 +79,7 @@ namespace H2DT.Grids
             return _cells[pos];
         }
 
-        public GridCell<T> GetCell(int x, int y)
+        public HandyGridCell<T> GetCell(int x, int y)
         {
             Vector2Int pos = new Vector2Int(x, y);
 
@@ -88,7 +88,7 @@ namespace H2DT.Grids
             return _cells[pos];
         }
 
-        public void TryGetCell(Vector2 worldPos, out GridCell<T> cell)
+        public void TryGetCell(Vector2 worldPos, out HandyGridCell<T> cell)
         {
             Vector2Int pos = WorldIntoCellPosDeducingOrigin(worldPos, _origin);
             _cells.TryGetValue(pos, out cell);
