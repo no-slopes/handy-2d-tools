@@ -14,9 +14,9 @@ namespace H2DT.Capabilities
         #region Editor
 
         [Header("Learnable")]
-        [SerializeField]
         [Tooltip("If the ability is learned (installed)")]
         [Space]
+        [SerializeField]
         protected bool _learned;
 
         [SerializeField]
@@ -30,10 +30,10 @@ namespace H2DT.Capabilities
         [Header("Learnable Events")]
         [Space]
         [SerializeField]
-        public UnityEvent<bool> LearnedStatusUpdate;
+        private UnityEvent<bool> _learnedStatusUpdate;
 
         [SerializeField]
-        public UnityEvent<bool> ActivationStatusUpdate;
+        private UnityEvent<bool> _activationStatusUpdate;
 
         #endregion
 
@@ -41,6 +41,9 @@ namespace H2DT.Capabilities
 
         public bool learned => _learned;
         public bool active => _active;
+
+        public UnityEvent<bool> learnedStatusUpdate => _learnedStatusUpdate;
+        public UnityEvent<bool> activationStatusUpdate => _activationStatusUpdate;
 
         #endregion
 
@@ -52,7 +55,7 @@ namespace H2DT.Capabilities
         public virtual void Learn()
         {
             _learned = true;
-            LearnedStatusUpdate.Invoke(_learned);
+            _learnedStatusUpdate.Invoke(_learned);
             DebugLearnable($"{GetType().Name} learn status update to {_learned}");
         }
 
@@ -63,7 +66,7 @@ namespace H2DT.Capabilities
         public virtual void Unlearn()
         {
             _learned = false;
-            LearnedStatusUpdate.Invoke(_learned);
+            _learnedStatusUpdate.Invoke(_learned);
             DebugLearnable($"{GetType().Name} learn status update to {_learned}");
             Deactivate();
         }
@@ -77,7 +80,7 @@ namespace H2DT.Capabilities
             if (!_learned) return;
 
             _active = true;
-            ActivationStatusUpdate.Invoke(_active);
+            _activationStatusUpdate.Invoke(_active);
             DebugLearnable($"{GetType().Name} active status update to {_active}");
         }
 
@@ -87,7 +90,7 @@ namespace H2DT.Capabilities
         public virtual void Deactivate()
         {
             _active = false;
-            ActivationStatusUpdate.Invoke(_active);
+            _activationStatusUpdate.Invoke(_active);
             DebugLearnable($"{GetType().Name} active status update to {_active}");
         }
 

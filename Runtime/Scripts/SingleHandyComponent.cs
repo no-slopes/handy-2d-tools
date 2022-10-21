@@ -22,6 +22,18 @@ namespace H2DT
 
         #endregion
 
+        #region Fields
+
+        private bool _singletonReady = false;
+
+        #endregion
+
+        #region Properties
+
+        protected bool singletonReady => _singletonReady;
+
+        #endregion
+
         #region Mono
 
         protected virtual void Awake()
@@ -45,6 +57,7 @@ namespace H2DT
             }
 
             Instance = thisInstance;
+            _singletonReady = true;
 
             if (_persistent)
                 DontDestroyOnLoad(thisInstance);

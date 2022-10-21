@@ -1,0 +1,54 @@
+{
+    "name": "DebugConsoleInputActions",
+    "maps": [
+        {
+            "name": "Console",
+            "id": "9dde3106-2aa5-456c-be9c-4a37569fa810",
+            "actions": [
+                {
+                    "name": "Toggle",
+                    "type": "Button",
+                    "id": "e471be9f-d819-4981-8ec2-59e7e21a171f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Execute",
+                    "type": "Button",
+                    "id": "e446b9e7-6068-4937-97cc-8ffdc5f30b06",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "9965cbac-f03e-4e39-a29b-ca2ae02fd97c",
+                    "path": "<Keyboard>/f5",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Toggle",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "564011b3-6832-4e19-863e-acb3a7e0b7be",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Execute",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

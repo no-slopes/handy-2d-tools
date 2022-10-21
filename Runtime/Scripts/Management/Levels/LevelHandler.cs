@@ -69,13 +69,13 @@ namespace H2DT.Management.Levels
 
         #endregion
 
-        #region Loading Logic
+        #region Loading
 
         public async Task<T> LoadLevel<T>(LevelInfo levelInfo, LoadSceneMode loadSceneMode = LoadSceneMode.Single, bool shouldCloseCurtains = true) where T : Level
         {
             if (!ValidateLevelInfo(levelInfo)) return null;
 
-            bool loadResult = await _sceneHandler.LoadScene(levelInfo.scene, loadSceneMode, shouldCloseCurtains, () => BeforeSceneStart(levelInfo));
+            bool loadResult = await _sceneHandler.LoadScene(levelInfo.scene, loadSceneMode, shouldCloseCurtains, () => BeforeSceneStart(levelInfo), OnSceneStart);
 
             if (!loadResult) return null;
 
@@ -84,10 +84,18 @@ namespace H2DT.Management.Levels
             return _currentLevel as T;
         }
 
+        #endregion
+
+        #region Validations
+
         private bool ValidateLevelInfo(LevelInfo levelInfo)
         {
             return levelInfo != null && levelInfo.scene != null && !string.IsNullOrEmpty(levelInfo.scene.sceneField);
         }
+
+        #endregion
+
+        #region Cycle Tasks
 
         public async Task BeforeSceneStart(LevelInfo levelInfo)
         {
@@ -105,6 +113,15 @@ namespace H2DT.Management.Levels
                 Debug.LogError($"{name} - {GetType().Name} - Missing level on loaded scene.");
             }
         }
+
+        private void OnSceneStart()
+        {
+            _currentLevel?.StartLevel();
+        }
+
+        #endregion
+
+        #region Initializing Levels
 
         protected async Task FindAndInitialize()
         {
@@ -151,6 +168,8 @@ namespace H2DT.Management.Levels
             if (!level.shouldSelfInitialize)
                 await level.Initialize();
         }
+
+        #endregion
 
         private async Task FindLevel(TimeSpan retryInterval, int maxAttemptCount = 3)
         {
@@ -220,6 +239,8 @@ namespace H2DT.Management.Levels
         }
 
         #endregion
+
+        #region Reseting
 
         /// <summary>
         /// Clears information about being in a level.

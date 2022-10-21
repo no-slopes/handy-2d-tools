@@ -20,7 +20,7 @@ namespace H2DT.Actions
         [Tooltip("Uncheck this so that input won't be processed. You also can use EnableInput(), DisableInput() and ToggleInput() methods to enable/disable input.")]
         [SerializeField]
         [Space]
-        protected bool _listenInput = true;
+        private bool _listenInput = true;
 
         [Space]
         [SerializeField]
@@ -36,6 +36,8 @@ namespace H2DT.Actions
         #endregion
 
         #region Properties
+
+        protected bool listenInput { get => _listenInput; set => _listenInput = value; }
 
         protected string previousMapName => _previousMapName;
         protected string currentMapName => _currentMapName;

@@ -54,7 +54,7 @@ namespace H2DT.Management.Scenes
 
         #region ID
 
-        [Button]
+        [ContextMenu("Generate ID")]
         public void GenerateId()
         {
             _id = System.Guid.NewGuid().ToString();

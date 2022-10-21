@@ -2,14 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
-using H2DT.Management.Player;
-using H2DT.NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace H2DT.Management.Levels
 {
-    public abstract class Level : HandyComponent
+    public abstract class Level : SingleHandyComponent<Level>
     {
         #region Inspector
 
@@ -53,11 +51,13 @@ namespace H2DT.Management.Levels
         private List<ILevelLeaveSubject> _leaveSubjects = new List<ILevelLeaveSubject>();
 
         // Actions
-        private UnityAction BeforeInitializationAction;
-        private UnityAction AfterInitializationAction;
+        private UnityAction _beforeInitialization;
+        private UnityAction _afterInitialization;
 
-        private UnityAction BeforeLeaveAction;
-        private UnityAction AfterLeaveAction;
+        private UnityAction _onLevelStart;
+
+        private UnityAction _beforeLeave;
+        private UnityAction _afterLeave;
 
         #endregion
 
@@ -66,21 +66,30 @@ namespace H2DT.Management.Levels
         protected LevelHandler levelHandler => _levelHandler;
         protected List<SubLevelAnchor> sublevelAnchors => _sublevelAnchors;
 
+        public abstract bool shouldSelfInitialize { get; }
+
         #endregion
 
         #region Getters
 
         public LevelInfo levelInfo => _levelInfo;
-        public bool shouldSelfInitialize => _shouldInitializeSelf;
 
         #endregion
 
         #region Mono
 
-        protected virtual async void Awake()
+        protected override async void Awake()
         {
-            if (_shouldInitializeSelf)
+            base.Awake();
+
+            if (shouldSelfInitialize)
                 await Initialize();
+        }
+
+        protected virtual void Start()
+        {
+            if (shouldSelfInitialize)
+                StartLevel();
         }
 
         #endregion
@@ -97,24 +106,28 @@ namespace H2DT.Management.Levels
 
             mi = stateType.GetMethod("BeforeInitialization", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
             if (mi != null)
-                BeforeInitializationAction = Delegate.CreateDelegate(typeof(UnityAction), this, mi) as UnityAction;
+                _beforeInitialization = Delegate.CreateDelegate(typeof(UnityAction), this, mi) as UnityAction;
 
             mi = stateType.GetMethod("AfterInitialization", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
             if (mi != null)
-                AfterInitializationAction = Delegate.CreateDelegate(typeof(UnityAction), this, mi) as UnityAction;
+                _afterInitialization = Delegate.CreateDelegate(typeof(UnityAction), this, mi) as UnityAction;
+
+            mi = stateType.GetMethod("OnLevelStart", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+            if (mi != null)
+                _onLevelStart = Delegate.CreateDelegate(typeof(UnityAction), this, mi) as UnityAction;
 
             mi = stateType.GetMethod("BeforeLeave", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
             if (mi != null)
-                BeforeLeaveAction = Delegate.CreateDelegate(typeof(UnityAction), this, mi) as UnityAction;
+                _beforeLeave = Delegate.CreateDelegate(typeof(UnityAction), this, mi) as UnityAction;
 
             mi = stateType.GetMethod("AfterLeave", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
             if (mi != null)
-                AfterLeaveAction = Delegate.CreateDelegate(typeof(UnityAction), this, mi) as UnityAction;
+                _afterLeave = Delegate.CreateDelegate(typeof(UnityAction), this, mi) as UnityAction;
         }
 
         #endregion
 
-        #region Logic
+        #region Level Cycle
 
         public virtual async Task Initialize()
         {
@@ -122,23 +135,28 @@ namespace H2DT.Management.Levels
             LoadInitializationSubjects(); // Loads all Initialization subjects components from objects list.
             LoadLeaveSubjects();
 
-            BeforeInitializationAction?.Invoke();
+            _beforeInitialization?.Invoke();
 
             await PerformInitializationTasks();// Performs all Initialization tasks
 
-            AfterInitializationAction?.Invoke();
+            _afterInitialization?.Invoke();
 
             LevelInitializedEvent.Invoke(this);
         }
 
+        public virtual void StartLevel()
+        {
+            _onLevelStart?.Invoke();
+        }
+
         public virtual async Task Leave(object trail = null)
         {
-            BeforeLeaveAction?.Invoke();
+            _beforeLeave?.Invoke();
 
             await PerformLeaveTasks();
             await _levelHandler.Leave(trail);
 
-            AfterLeaveAction?.Invoke();
+            _afterLeave?.Invoke();
 
             LevelLeftEvent.Invoke(this);
         }
@@ -151,12 +169,12 @@ namespace H2DT.Management.Levels
                 return;
             }
 
-            BeforeLeaveAction?.Invoke();
+            _beforeLeave?.Invoke();
 
             await PerformLeaveTasks();
             await _levelHandler.Leave(levelInfo, trail);
 
-            AfterLeaveAction?.Invoke();
+            _afterLeave?.Invoke();
 
             LevelLeftEvent.Invoke(this);
         }

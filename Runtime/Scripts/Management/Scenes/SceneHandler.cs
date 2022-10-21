@@ -118,7 +118,7 @@ namespace H2DT.Management.Scenes
 
         #region Scene Management
 
-        public async Task<bool> LoadScene(SceneInfo targetSceneInfo, LoadSceneMode loadSceneMode = LoadSceneMode.Single, bool closeCurtains = true, Func<Task> BeforeOpenCurtainsTask = null)
+        public async Task<bool> LoadScene(SceneInfo targetSceneInfo, LoadSceneMode loadSceneMode = LoadSceneMode.Single, bool closeCurtains = true, Func<Task> BeforeOpenCurtainsTask = null, UnityAction AfterOpenCurtains = null)
         {
 
             if (_status != SceneHandlerStatus.Idle)
@@ -154,6 +154,8 @@ namespace H2DT.Management.Scenes
                 await BeforeOpenCurtainsTask();
 
             await OpenCurtains();
+
+            AfterOpenCurtains?.Invoke();
 
             _status = SceneHandlerStatus.Idle;
 

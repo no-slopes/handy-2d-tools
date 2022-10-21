@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using H2DT.Management.Scenes;
 using H2DT.NaughtyAttributes;
 using UnityEngine;
@@ -11,6 +9,7 @@ namespace H2DT.Management.Levels
     {
         #region Inspector
 
+        [Header("ID")]
         [Space]
         [ReadOnly]
         [SerializeField]
@@ -36,6 +35,10 @@ namespace H2DT.Management.Levels
 
         #endregion
 
+        #region Fields
+
+        #endregion
+
         #region  Getters
 
         public string id => _id;
@@ -49,7 +52,7 @@ namespace H2DT.Management.Levels
 
         #region ID
 
-        [Button]
+        [ContextMenu("Generate ID")]
         public void GenerateId()
         {
             _id = System.Guid.NewGuid().ToString();
